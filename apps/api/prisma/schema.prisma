@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String?  // null for OAuth users
+  provider  String   @default("local") // 'local' | 'google' | 'github'
+  createdAt DateTime @default(now())
+  resumes   Resume[]
+
+  @@map("users")
+}
+
+model Resume {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  templateId String   @default("classic")
+  data       Json     // Full ResumeState JSON
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  exports    Export[]
+
+  @@map("resumes")
+}
+
+model Export {
+  id         String   @id @default(uuid())
+  resumeId   String
+  resume     Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  format     String   // 'pdf' | 'docx'
+  storageUrl String?
+  createdAt  DateTime @default(now())
+
+  @@map("exports")
+}

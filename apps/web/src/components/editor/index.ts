@@ -1,0 +1,6 @@
+export { PersonalInfo } from './PersonalInfo'
+export { WorkExperience } from './WorkExperience'
+export { EducationSection } from './Education'
+export { SkillsSection } from './Skills'
+export { ProjectsSection } from './Projects'
+export { CertificationsSection } from './Certifications'
