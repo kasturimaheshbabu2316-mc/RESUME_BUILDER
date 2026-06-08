@@ -1,8 +1,8 @@
 {
   "framework": "vite",
-  "buildCommand": "corepack pnpm install && corepack pnpm --filter @resume-builder/types build && corepack pnpm --filter web build",
+  "buildCommand": "pnpm install && pnpm --filter web build",
   "outputDirectory": "apps/web/dist",
-  "installCommand": "corepack pnpm install",
+  "installCommand": "pnpm install",
   "rewrites": [
     {
       "source": "/(.*)",
