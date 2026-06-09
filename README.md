@@ -116,6 +116,57 @@ pnpm --filter web preview
 
 ---
 
+## Backend Setup (Phase 6)
+
+### Prerequisites
+- PostgreSQL database (local or cloud)
+  - **Option 1:** Local PostgreSQL
+  - **Option 2:** [Neon](https://neon.tech) (Free tier)
+  - **Option 3:** [Supabase](https://supabase.com) (Free tier)
+
+### Setup Instructions
+
+```bash
+# 1. Navigate to API directory
+cd apps/api
+
+# 2. Copy environment template
+cp .env.example .env
+
+# 3. Update .env with your database URL
+# DATABASE_URL="postgresql://user:password@localhost:5432/resume_builder?schema=public"
+
+# 4. Generate Prisma Client
+npx prisma generate
+
+# 5. Run database migrations
+npx prisma db push
+
+# 6. Start the API server
+cd ../..
+pnpm --filter api dev
+```
+
+### API Endpoints
+
+#### Authentication (Public)
+- `POST /api/auth/register` - Create new account
+- `POST /api/auth/login` - Login and get tokens
+- `POST /api/auth/refresh` - Refresh access token
+- `POST /api/auth/logout` - Logout
+
+#### Resumes (Protected - Requires JWT)
+- `GET /api/resumes` - List all user's resumes
+- `GET /api/resumes/:id` - Get single resume
+- `POST /api/resumes` - Create new resume
+- `PUT /api/resumes/:id` - Update resume
+- `DELETE /api/resumes/:id` - Delete resume
+
+#### Authentication
+All protected endpoints require `Authorization: Bearer <access_token>` header.
+
+---
+
 ## Deployment to Vercel
 
 ### Prerequisites
@@ -224,8 +275,8 @@ See `apps/api/.env.example` for template.
 ✅ **Phase 3:** Form Editor (Sections)  
 ✅ **Phase 4:** Live Preview & Templates  
 ✅ **Phase 5:** PDF Export  
+✅ **Phase 6:** Backend API  
 
-⏳ **Phase 6:** Backend API (Next)  
 ⏳ **Phase 7:** Cloud Sync & Auth UI  
 ⏳ **Phase 8:** Polish, A11y & Responsiveness  
 ⏳ **Phase 9:** Testing & QA  

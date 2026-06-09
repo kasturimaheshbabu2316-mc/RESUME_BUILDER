@@ -1,5 +1,5 @@
 // This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// learn more here: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -11,37 +11,44 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   email     String   @unique
-  password  String?  // null for OAuth users
-  provider  String   @default("local") // 'local' | 'google' | 'github'
+  password  String
+  name      String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   resumes   Resume[]
+  exports   Export[]
 
   @@map("users")
 }
 
 model Resume {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   userId     String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  title      String
+  title      String   @default("Untitled Resume")
   templateId String   @default("classic")
-  data       Json     // Full ResumeState JSON
+  data       Json     // Stores the full resume state as JSON
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   exports    Export[]
 
+  @@index([userId])
   @@map("resumes")
 }
 
 model Export {
-  id         String   @id @default(uuid())
+  id         String   @id @default(cuid())
   resumeId   String
   resume     Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-  format     String   // 'pdf' | 'docx'
-  storageUrl String?
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  format     String   @default("pdf") // pdf, png, etc.
+  storageUrl String?  // S3/Cloudflare URL (optional for now)
   createdAt  DateTime @default(now())
 
+  @@index([userId])
+  @@index([resumeId])
   @@map("exports")
 }

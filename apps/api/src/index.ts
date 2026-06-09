@@ -3,6 +3,9 @@ import cors from 'cors'
 import helmet from 'helmet'
 import { rateLimit } from 'express-rate-limit'
 import 'dotenv/config'
+import authRoutes from './routes/auth'
+import resumeRoutes from './routes/resumes'
+import { authenticateToken } from './middleware/auth'
 
 const app = express()
 const PORT = process.env.PORT ?? 3000
@@ -35,9 +38,9 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
-// ── Routes (to be added in Phase 6) ────────────────────────────────────────
-// app.use('/api/auth', authRouter)
-// app.use('/api/resumes', resumesRouter)
+// ── Routes ──────────────────────────────────────────────────────────────────
+app.use('/api/auth', authRoutes)
+app.use('/api/resumes', authenticateToken, resumeRoutes)
 
 // ── 404 handler ─────────────────────────────────────────────────────────────
 app.use((_req, res) => {
